@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Toucan | MinnowByte</title>
+    <meta name="description" content="Typing Toucan - A progressive typing flying-avian game.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Specific styles for product page */
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .download-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2.5rem;
+        }
+
+        .download-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .btn-download {
+            margin-top: 1.5rem;
+            padding: 0.8rem 2rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            color: #fff;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .feature-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-glow"></div>
+
+    <header>
+        <nav class="glass-panel">
+            <div class="logo"><a href="index.html">MinnowByte</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <div class="hero-content">
+                <h1>Typing <span class="highlight">Toucan</span></h1>
+                <p class="tagline">Fly high, type fast, and master the jungle.</p>
+            </div>
+        </section>
+
+        <section class="glass-panel">
+            <h2>About the Game</h2>
+            <p>Typing Toucan is a progressive typing game where your keyboard skills keep you airborne. Avoid obstacles,
+                collect power-ups, and learn to type faster and more creating with every level.</p>
+
+            <ul class="feature-list">
+                <li>Progressive difficulty levels</li>
+                <li>Engaging "flying-avian" mechanics</li>
+                <li>Track your WPM and accuracy</li>
+                <li>Cross-platform support</li>
+            </ul>
+        </section>
+
+        <section id="downloads">
+            <h2>Get the Game</h2>
+            <div class="download-grid">
+                <!-- Google Play -->
+                <article class="glass-panel download-card">
+                    <div class="download-icon">📱</div>
+                    <h3>Android</h3>
+                    <p>Get it on Google Play</p>
+                    <a href="#" class="btn-download">Download APK</a>
+                </article>
+
+                <!-- Windows -->
+                <article class="glass-panel download-card">
+                    <div class="download-icon">💻</div>
+                    <h3>Windows</h3>
+                    <p>Desktop Executable</p>
+                    <a href="#" class="btn-download">Download .exe</a>
+                </article>
+
+                <!-- Source Code -->
+                <article class="glass-panel download-card">
+                    <div class="download-icon">👩‍💻</div>
+                    <h3>Source Code</h3>
+                    <p>View on GitHub</p>
+                    <a href="https://github.com/BuffaloMtnBill/TypingToucan" class="btn-download">View Repository</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 MinnowByte. All rights reserved.</p>
+    </footer>
+    <script src="particles.js"></script>
+</body>
+
+</html>
