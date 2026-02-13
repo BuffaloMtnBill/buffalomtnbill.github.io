@@ -27,7 +27,7 @@ const perceptionRadius = 40;
 const separationForce = 0.75;
 const alignmentForce = 0.1;
 const cohesionForce = 0.02;
-const maxSpeed = 2.5; // Max speed
+const maxSpeed = 2.0; // Max speed
 const breakawayChance = 0.000001; // Chance to break away
 
 function updateParticles() {
@@ -77,55 +77,90 @@ class Particle {
         this.color = colors[Math.floor(Math.random() * colors.length)];
     }
 
-    flock(particles) {
+    flock(myIndex, allParticles) {
         let alignment = { x: 0, y: 0 };
         let cohesion = { x: 0, y: 0 };
         let separation = { x: 0, y: 0 };
         let total = 0;
+        const perceptionRadiusSq = perceptionRadius * perceptionRadius;
 
-        for (let other of particles) {
-            if (other !== this) {
-                let d = Math.sqrt((this.x - other.x) ** 2 + (this.y - other.y) ** 2);
-                if (d < perceptionRadius) {
-                    if (other.isBreakingAway) {
-                        // This 'other' particle is a breakaway leader. Apply a strong cohesion force directly.
-                        this.vx += (other.x - this.x) * cohesionForce * breakawayAttractionMultiplier;
-                        this.vy += (other.y - this.y) * cohesionForce * breakawayAttractionMultiplier;
-                    } else {
-                        // This is a normal flock member. Add its contribution to the average.
-                        alignment.x += other.vx;
-                        alignment.y += other.vy;
-                        cohesion.x += other.x;
-                        cohesion.y += other.y;
-                        separation.x += (this.x - other.x) / (d * d || 1);
-                        separation.y += (this.y - other.y) / (d * d || 1);
-                        total++;
-                    }
+        // Search backwards
+        for (let i = myIndex - 1; i >= 0; i--) {
+            const other = allParticles[i];
+            const dx = this.x - other.x;
+            
+            // Break if we are outside the perception radius on the x-axis
+            if (dx > perceptionRadius) {
+                break;
+            }
+
+            const dy = this.y - other.y;
+            const dSq = dx*dx + dy*dy;
+
+            if (dSq < perceptionRadiusSq) {
+                if (other.isBreakingAway) {
+                    this.vx += (other.x - this.x) * cohesionForce * breakawayAttractionMultiplier;
+                    this.vy += (other.y - this.y) * cohesionForce * breakawayAttractionMultiplier;
+                } else {
+                    alignment.x += other.vx;
+                    alignment.y += other.vy;
+                    cohesion.x += other.x;
+                    cohesion.y += other.y;
+                    separation.x += dx / (dSq || 1);
+                    separation.y += dy / (dSq || 1);
+                    total++;
                 }
             }
         }
 
+        // Search forwards
+        for (let i = myIndex + 1; i < allParticles.length; i++) {
+            const other = allParticles[i];
+            const dx = other.x - this.x;
+
+            // Break if we are outside the perception radius on the x-axis
+            if (dx > perceptionRadius) {
+                break;
+            }
+
+            const dy = other.y - this.y;
+            const dSq = dx*dx + dy*dy;
+
+            if (dSq < perceptionRadiusSq) {
+                if (other.isBreakingAway) {
+                    this.vx += (other.x - this.x) * cohesionForce * breakawayAttractionMultiplier;
+                    this.vy += (other.y - this.y) * cohesionForce * breakawayAttractionMultiplier;
+                } else {
+                    alignment.x += other.vx;
+                    alignment.y += other.vy;
+                    cohesion.x += other.x;
+                    cohesion.y += other.y;
+                    // Note the sign is flipped here because dx is calculated from the 'other' perspective
+                    separation.x -= dx / (dSq || 1);
+                    separation.y -= dy / (dSq || 1);
+                    total++;
+                }
+            }
+        }
+
+        // Apply average forces
         if (total > 0) {
-            // Apply the standard flocking forces based on the average of NON-breakaway neighbors
-            // Alignment
             alignment.x /= total;
             alignment.y /= total;
             this.vx += (alignment.x - this.vx) * alignmentForce;
             this.vy += (alignment.y - this.vy) * alignmentForce;
 
-            // Cohesion
             cohesion.x /= total;
             cohesion.y /= total;
             this.vx += (cohesion.x - this.x) * cohesionForce;
             this.vy += (cohesion.y - this.y) * cohesionForce;
             
-            // Separation
             this.vx += separation.x * separationForce;
             this.vy += separation.y * separationForce;
         }
     }
 
-    update(particles) {
+    update(myIndex, allParticles) {
         if (this.isBreakingAway) {
             // Every 15 frames (~0.25s), deviate from the current heading
             if (this.breakawayTimer % 15 === 0) {
@@ -151,7 +186,7 @@ class Particle {
             }
         } else {
             // Apply flocking only when not breaking away
-            this.flock(particles);
+            this.flock(myIndex, allParticles);
 
             // Broad Attraction (Magnetic Pull) is also a following behavior
             if (mouse.x != null) {
@@ -240,11 +275,18 @@ class Particle {
     }
 }
 
+let frameCounter = 0;
 function animate() {
+    frameCounter++;
+    // Every 3 frames, sort the particles by their x-position
+    if (frameCounter % 3 === 0) {
+        particles.sort((a, b) => a.x - b.x);
+    }
+
     ctx.clearRect(0, 0, width, height);
 
     for (let i = 0; i < particles.length; i++) {
-        particles[i].update(particles);
+        particles[i].update(i, particles); // Pass index to update
         particles[i].draw();
     }
     requestAnimationFrame(animate);

@@ -102,11 +102,23 @@ nav {
     padding: 1rem 2rem !important; /* Override glass-panel padding */
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent-color);
-    letter-spacing: 1px;
+.logo a, .logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.page-icon-top {
+    width: 300px; /* A larger size for the main page icon */
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 2rem auto; /* Center it horizontally and add margin below */
+    display: block; /* To apply margin: auto for centering */
 }
 
 .nav-links {
@@ -190,9 +202,29 @@ main {
     gap: 2rem;
 }
 
+.project-grid > .project-card:first-child {
+    grid-column: 1 / -1; /* Make the first card span all columns */
+}
+
+.project-card.coming-soon {
+    grid-column: 1 / -1; /* Make the coming-soon card span all columns */
+}
+
 .project-card {
+    display: flex; /* Make the card a flex container */
+    align-items: center; /* Vertically center icon and text */
+    gap: 3rem; /* Space between icon and text content */
     transition: transform 0.3s ease;
     border-left: 3px solid transparent;
+    background: rgba(11, 28, 44, 0.9); /* A more opaque version of the glass */
+    padding: 1.5rem;
+    border-radius: 12px; /* A slightly smaller radius than the main panel */
+    color: inherit; /* Ensure text color is not the default link blue */
+    text-decoration: none; /* Remove underline from link */
+}
+
+.project-text-content {
+    flex-grow: 1; /* Allow text content to take remaining space */
 }
 
 .project-card:hover {
@@ -201,7 +233,15 @@ main {
 }
 
 .project-card h3 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem; /* Revert h3 to its original text styling */
+}
+
+.project-icon {
+    width: 120px; /* Set a fixed width */
+    aspect-ratio: 1; /* Ensure height matches width */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    border-radius: 50%; /* Still round */
+    object-fit: cover; /* Ensure image covers the area nicely */
 }
 
 .project-card p {
@@ -240,5 +280,17 @@ footer {
     
     nav {
         justify-content: center;
+    }
+
+    .project-card {
+        flex-direction: column; /* Stack icon and text vertically */
+        align-items: center;   /* Center them horizontally */
+        text-align: center;    /* Center the text inside the card */
+    }
+
+    .project-icon {
+        width: 25vw;      /* Set width relative to the viewport */
+        max-width: 80px;    /* But cap it at 80px */
+        margin-bottom: 0.5rem; /* Add some space below the icon */
     }
 }
